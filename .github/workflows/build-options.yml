@@ -36,7 +36,10 @@ jobs:
         uses: cachix/install-nix-action@v26
       - name: Build options.json
         run: |
+          mkdir site
+          git -C nix-darwin rev-parse HEAD > site/revision
           nix-build ./nix-darwin/release.nix -I nixpkgs=channel:nixpkgs-23.11-darwin -I darwin=nix-darwin -A options
+          cp result/share/doc/darwin/options.json site/
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact
