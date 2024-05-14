@@ -1,4 +1,4 @@
-dname: Build darwin options.json
+name: Build darwin options.json
 
 on:
   schedule:
