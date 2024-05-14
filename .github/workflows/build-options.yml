@@ -1,0 +1,48 @@
+name: Build darwin options.json
+
+on:
+  schedule:
+    - cron: "38 3 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: macos-14
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          path: nix-darwin-options
+          fetch-depth: 0
+      - name: Checkout nix-darwin
+        uses: actions/checkout@v4
+        with:
+          name: LnL7/nix-darwin
+          ref: refs/heads/master
+          path: nix-darwin
+      - name: Install Nix
+        uses: cachix/install-nix-action@v26
+      - name: Build options.json
+        run: |
+          nix-build ./nix-darwin/release.nix -I darwin=nix-darwin -A options
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: result/share/doc/darwin/options.json
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
