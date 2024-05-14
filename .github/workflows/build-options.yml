@@ -1,4 +1,4 @@
-name: Build darwin options.json
+dname: Build darwin options.json
 
 on:
   schedule:
@@ -36,7 +36,7 @@ jobs:
         uses: cachix/install-nix-action@v26
       - name: Build options.json
         run: |
-          nix-build ./nix-darwin/release.nix -I darwin=nix-darwin -A options
+          nix-build ./nix-darwin/release.nix -I nixpkgs=channel:nixpkgs-23.11-darwin -I darwin=nix-darwin -A options
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact
