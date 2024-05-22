@@ -1,4 +1,4 @@
-name: Build darwin options.json
+name: Build options.json
 
 on:
   schedule:
@@ -32,14 +32,26 @@ jobs:
           repository: LnL7/nix-darwin
           ref: refs/heads/master
           path: nix-darwin
+      - name: Checkout home-manager
+        uses: actions/checkout@v4
+        with:
+          repository: nix-community/home-manager
+          ref: refs/heads/master
+          path: home-manager
       - name: Install Nix
         uses: cachix/install-nix-action@v26
-      - name: Build options.json
+      - name: Build darwin options.json
         run: |
-          mkdir site
-          git -C nix-darwin rev-parse HEAD > site/revision
+          mkdir -p site/darwin
+          git -C nix-darwin rev-parse HEAD > site/darwin/revision
           nix-build ./nix-darwin/release.nix -I nixpkgs=channel:nixpkgs-23.11-darwin -I darwin=nix-darwin -A options
-          cp result/share/doc/darwin/options.json{,.br} site/
+          cp result/share/doc/darwin/options.json{,.br} site/darwin/
+      - name: Build home-manager options.json
+        run: |
+          mkdir -p site/home-manager
+          git -C home-manager rev-parse HEAD > site/home-manager/revision
+          nix-build ./home-manager/default.nix -I nixpkgs=channel:nixpkgs-unstable -I home-manager=home-manager -A docs.json
+          cp result/share/doc/home-manager/options.json{,.br} site/home-manager/
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact
