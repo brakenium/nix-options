@@ -44,7 +44,7 @@ jobs:
         run: |
           mkdir -p site/darwin
           git -C nix-darwin rev-parse HEAD > site/darwin/revision
-          nix-build ./nix-darwin/release.nix -I nixpkgs=channel:nixpkgs-24.05-darwin -I darwin=nix-darwin -A docs.optionsJSON
+          nix-build ./nix-darwin/release.nix -I nixpkgs=channel:nixpkgs-unstable -I darwin=nix-darwin -A docs.optionsJSON
           cp result/share/doc/darwin/options.json{,.br} site/darwin/
       - name: Build home-manager options.json
         run: |
