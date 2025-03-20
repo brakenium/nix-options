@@ -1,6 +1,9 @@
 name: Build options.json
 
 on:
+  push:
+    branches:
+      - main
   schedule:
     - cron: "38 3 * * *"
   workflow_dispatch:
