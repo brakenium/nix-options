@@ -24,7 +24,7 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: macos-14
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout nix-darwin
         uses: actions/checkout@v4
@@ -38,18 +38,6 @@ jobs:
           repository: nix-community/home-manager
           ref: refs/heads/master
           path: home-manager
-      - name: Checkout nur-combined
-        uses: actions/checkout@v4
-        with:
-          repository: nix-community/nur-combined
-          ref: refs/heads/main
-          path: nur-combined
-      - name: Checkout nur-search
-        uses: actions/checkout@v4
-        with:
-          repository: nix-community/nur-search
-          ref: refs/heads/main
-          path: nur-search
       - name: Install Nix
         uses: cachix/install-nix-action@v31
       - name: Build darwin options.json
@@ -64,11 +52,6 @@ jobs:
           git -C home-manager rev-parse HEAD > site/home-manager/revision
           nix-build ./home-manager/default.nix -I nixpkgs=channel:nixpkgs-unstable -I home-manager=home-manager -A docs.json
           cp result/share/doc/home-manager/options.json{,.br} site/home-manager/
-      - name: Build nur packages.json
-        run: |
-          mkdir -p site/nur
-          git -C nur-combined rev-parse HEAD > site/nur/revision
-          cp nur-search/data/packages.json site/nur/
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact
