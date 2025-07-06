@@ -38,6 +38,12 @@ jobs:
           repository: nix-community/home-manager
           ref: refs/heads/master
           path: home-manager
+      - name: Checkout brakenium/nix-options-json-wrapper
+        uses: actions/checkout@v4
+        with:
+          repository: brakenium/nix-options-json-wrapper
+          ref: refs/heads/main
+          path: nix-options-json-wrapper
       - name: Install Nix
         uses: cachix/install-nix-action@v31
       - name: Build darwin options.json
@@ -55,7 +61,9 @@ jobs:
       - name: Build stylix options.json
         run: |
           mkdir -p site/stylix
-          nix build github:brakenium/nix-options-json-wrapper#hmOptionsJSON
+          nix flake metadata --json ./nix-options-json-wrapper# | jq -r '.locks.nodes.stylix.locked.rev' > site/stylix/revision
+          # Use the nix-options-json-wrapper flake to build the options.json for stylix
+          nix build ./nix-options-json-wrapper#hmOptionsJSON -I nixpkgs=channel:nixpkgs-unstable
           cp result/share/doc/stylix/options.json{,.br} site/stylix/
       - name: Setup Pages
         uses: actions/configure-pages@v5
