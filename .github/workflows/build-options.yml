@@ -64,7 +64,7 @@ jobs:
           nix flake metadata --json ./nix-options-json-wrapper# | jq -r '.locks.nodes.stylix.locked.rev' > site/stylix/revision
           # Use the nix-options-json-wrapper flake to build the options.json for stylix
           nix build ./nix-options-json-wrapper#hmOptionsJSON -I nixpkgs=channel:nixpkgs-unstable
-          cp result/share/doc/stylix/options.json{,.br} site/stylix/
+          cp result/share/doc/nixos/options.json{,.br} site/stylix/
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact
