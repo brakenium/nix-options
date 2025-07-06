@@ -54,6 +54,7 @@ jobs:
           cp result/share/doc/home-manager/options.json{,.br} site/home-manager/
       - name: Build stylix options.json
         run: |
+          mkdir -p site/stylix
           nix build github:brakenium/nix-options-json-wrapper#hmOptionsJSON
           cp result/share/doc/stylix/options.json{,.br} site/stylix/
       - name: Setup Pages
